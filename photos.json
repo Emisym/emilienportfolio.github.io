@@ -129,6 +129,11 @@
   "file": "images/cookies-38680.jpg"
 },
   {
+  "title": "Tarte citron meringuée",
+  "category": "Patisserie",
+  "file": "images/tarte-citron-meringuee-78455.jpg"
+},
+  {
   "title": "Pâte de fruit framboise",
   "category": "Patisserie",
   "file": "images/pate-de-fruit-framboise-96125.jpg"
@@ -266,7 +271,7 @@
   {
   "title": "Petit four",
   "category": "Traiteur",
-  "file": "images/petit-four-79331.jpg"
+  "file": "images/petit-four-89105.jpg"
 },
   {
   "title": "Petit four",
@@ -302,9 +307,4 @@
   "title": "Cake salés",
   "category": "Traiteur",
   "file": "images/cake-sales-78552.jpg"
-},
-  {
-  "title": "Tarte citron meringuée",
-  "category": "Patisserie",
-  "file": "images/tarte-citron-meringuee-78455.jpg"
 }]
