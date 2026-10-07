@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio — Créations pâtissières</title>
+<style>
+  :root{
+    --bg: #FFFFFF;
+    --bg-alt: #F6F4F1;
+    --ink: #262220;
+    --ink-soft: #7A7068;
+    --accent: #7A2E33;
+    --line: #E3DCD2;
+    --overlay: rgba(38,34,32,0.88);
+  }
+  *{ box-sizing: border-box; }
+  html,body{ height:100%; margin:0; }
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+    display:flex;
+    flex-direction:column;
+    min-height:100%;
+  }
+  .app{ display:flex; flex:1; min-height:100vh; }
+
+  /* SIDEBAR */
+  .sidebar{
+    width: 264px;
+    flex: 0 0 264px;
+    background: var(--bg-alt);
+    border-right: 1px solid var(--line);
+    padding: 44px 28px 24px;
+    display:flex;
+    flex-direction:column;
+    position: sticky;
+    top:0;
+    height:100vh;
+  }
+  .brand h1{ font-weight:bold; font-size: 1.5rem; line-height:1.2; margin:0 0 6px; }
+  .brand p.tagline{ margin:0 0 36px; color: var(--ink-soft); font-size: 0.82rem; }
+  .section-label{ font-size: 0.72rem; color: var(--ink-soft); margin: 0 0 12px; }
+  .categories{ display:flex; flex-direction:column; gap: 2px; margin-bottom: 28px; }
+  .cat-btn{
+    all: unset; cursor:pointer; display:flex; justify-content:space-between; align-items:center;
+    padding: 9px 10px; border-radius: 3px; font-size: 0.92rem; color: var(--ink);
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .cat-btn:hover{ background: rgba(122,46,51,0.07); }
+  .cat-btn.active{ color: var(--accent); font-weight: bold; }
+  .cat-btn .count{ font-size: 0.76rem; color: var(--ink-soft); }
+  .cat-btn.active .count{ color: var(--accent); }
+  .sidebar-spacer{ flex:1; }
+  .contact{ display:flex; flex-direction:column; gap: 5px; font-size: 0.8rem; }
+  .contact a{ color: var(--ink-soft); text-decoration:none; border-bottom: 1px solid transparent; }
+  .contact a:hover{ color: var(--accent); border-color: var(--accent); }
+
+  /* GALLERY */
+  main.gallery{ flex:1; padding: 48px 40px 60px; }
+  .gallery-head{
+    display:flex; justify-content:space-between; align-items:baseline;
+    margin-bottom: 28px; border-bottom: 1px solid var(--line); padding-bottom: 16px;
+  }
+  .gallery-head h2{ font-weight:bold; font-size: 1.25rem; margin:0; }
+  .gallery-head .total{ font-size: 0.8rem; color: var(--ink-soft); }
+
+  .grid{ display:grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  @media (max-width: 1180px){ .grid{ grid-template-columns: repeat(4, 1fr);} }
+  @media (max-width: 920px){ .grid{ grid-template-columns: repeat(3, 1fr);} }
+  @media (max-width: 680px){ .grid{ grid-template-columns: repeat(2, 1fr);} }
+  @media (max-width: 420px){ .grid{ grid-template-columns: repeat(1, 1fr);} }
+
+  .tile{ position:relative; aspect-ratio: 1/1; overflow:hidden; cursor:pointer; background: var(--bg-alt); border: 1px solid var(--line); }
+  .tile img{ width:100%; height:100%; object-fit: cover; display:block; transition: transform 0.4s ease; }
+  .tile:hover img{ transform: scale(1.035); }
+  .tile .caption{
+    position:absolute; left:0; right:0; bottom:0; padding: 10px 12px;
+    background: linear-gradient(to top, var(--overlay), transparent);
+    color: #FDFAF6; opacity:0; transition: opacity 0.2s ease; font-size: 0.78rem;
+  }
+  .tile:hover .caption{ opacity:1; }
+  .tile .caption .cat{ display:block; opacity:0.75; font-size:0.7rem; margin-top:2px; }
+  .empty-state{ grid-column: 1/-1; padding: 60px 10px; text-align:center; color: var(--ink-soft); font-size:0.9rem; }
+
+  .lightbox-backdrop{ position:fixed; inset:0; background: var(--overlay); display:none; align-items:center; justify-content:center; z-index: 60; padding: 30px; }
+  .lightbox-backdrop.open{ display:flex; }
+  .lightbox{ max-width: min(90vw, 720px); max-height: 85vh; display:flex; flex-direction:column; align-items:center; }
+  .lightbox img{ max-width:100%; max-height: 70vh; object-fit:contain; background: var(--bg-alt); border: 1px solid var(--line); }
+  .lightbox-cap{ color: #FDFAF6; text-align:center; margin-top: 14px; font-size: 0.9rem; }
+  .lightbox-cap .cat{ display:block; opacity:0.7; font-size:0.78rem; margin-top:4px; }
+  .lightbox-close{ position:fixed; top: 20px; right: 24px; background:none; border:none; color:#FDFAF6; font-size: 26px; cursor:pointer; z-index:61; }
+
+  @media (max-width: 780px){
+    .app{ flex-direction:column; }
+    .sidebar{ position: static; width:100%; flex-basis:auto; height:auto; padding: 24px 22px 18px; border-right:none; border-bottom: 1px solid var(--line); }
+    main.gallery{ padding: 28px 20px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <h1>Votre nom</h1>
+      <p class="tagline">Pâtissier · Portfolio de créations</p>
+    </div>
+    <p class="section-label">Catégories</p>
+    <nav class="categories" id="categoryList"></nav>
+    <div class="sidebar-spacer"></div>
+    <div class="contact">
+      <a href="mailto:vous@example.com">vous@example.com</a>
+      <a href="#">linkedin.com/in/votre-profil</a>
+    </div>
+  </aside>
+
+  <main class="gallery">
+    <div id="galleryHeadWrap"></div>
+    <div class="grid" id="grid"></div>
+  </main>
+</div>
+
+<div class="lightbox-backdrop" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">&times;</button>
+  <div class="lightbox" id="lightboxContent"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var CATEGORIES = ["Patisserie", "Boulangerie", "Traiteur", "Viennoiserie"];
+  var state = { active: "all", photos: [] };
+
+  function escapeHtml(s){
+    return String(s || "").replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  function renderNav(){
+    var counts = {};
+    state.photos.forEach(function(p){ counts[p.category] = (counts[p.category]||0) + 1; });
+    var html = '<button class="cat-btn' + (state.active === "all" ? " active" : "") + '" data-cat="all">Toutes <span class="count">' + state.photos.length + '</span></button>';
+    CATEGORIES.forEach(function(cat){
+      var n = counts[cat] || 0;
+      html += '<button class="cat-btn' + (state.active === cat ? " active" : "") + '" data-cat="' + escapeHtml(cat) + '">' + escapeHtml(cat) + ' <span class="count">' + n + '</span></button>';
+    });
+    document.getElementById("categoryList").innerHTML = html;
+    Array.prototype.forEach.call(document.querySelectorAll(".cat-btn"), function(btn){
+      btn.onclick = function(){ state.active = btn.getAttribute("data-cat"); render(); };
+    });
+  }
+
+  function visiblePhotos(){
+    return state.active === "all" ? state.photos : state.photos.filter(function(p){ return p.category === state.active; });
+  }
+
+  function renderHead(){
+    var visible = visiblePhotos();
+    var title = state.active === "all" ? "Toutes les créations" : state.active;
+    document.getElementById("galleryHeadWrap").innerHTML =
+      '<div class="gallery-head"><h2>' + escapeHtml(title) + '</h2><span class="total">' + visible.length + (visible.length > 1 ? " photos" : " photo") + '</span></div>';
+  }
+
+  function renderGrid(){
+    var visible = visiblePhotos();
+    var grid = document.getElementById("grid");
+    if(visible.length === 0){
+      grid.innerHTML = '<div class="empty-state">Aucune photo dans cette catégorie pour le moment.</div>';
+      return;
+    }
+    grid.innerHTML = visible.map(function(p){
+      return '<div class="tile" data-file="' + escapeHtml(p.file) + '">' +
+        '<img src="' + escapeHtml(p.file) + '" alt="' + escapeHtml(p.title) + '" loading="lazy">' +
+        '<div class="caption">' + escapeHtml(p.title) + '<span class="cat">' + escapeHtml(p.category) + '</span></div>' +
+      '</div>';
+    }).join("");
+    Array.prototype.forEach.call(grid.querySelectorAll(".tile"), function(tile){
+      tile.onclick = function(){
+        var file = tile.getAttribute("data-file");
+        var photo = state.photos.filter(function(p){ return p.file === file; })[0];
+        if(photo) openLightbox(photo);
+      };
+    });
+  }
+
+  function openLightbox(photo){
+    document.getElementById("lightboxContent").innerHTML =
+      '<img src="' + escapeHtml(photo.file) + '" alt="' + escapeHtml(photo.title) + '">' +
+      '<div class="lightbox-cap">' + escapeHtml(photo.title) + '<span class="cat">' + escapeHtml(photo.category) + '</span></div>';
+    document.getElementById("lightbox").classList.add("open");
+  }
+  document.getElementById("lightboxClose").addEventListener("click", function(){
+    document.getElementById("lightbox").classList.remove("open");
+  });
+  document.getElementById("lightbox").addEventListener("click", function(e){
+    if(e.target.id === "lightbox") document.getElementById("lightbox").classList.remove("open");
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape") document.getElementById("lightbox").classList.remove("open");
+  });
+
+  function render(){ renderNav(); renderHead(); renderGrid(); }
+
+  fetch("photos.json")
+    .then(function(r){ return r.json(); })
+    .then(function(data){ state.photos = Array.isArray(data) ? data : []; render(); })
+    .catch(function(){
+      document.getElementById("grid").innerHTML = '<div class="empty-state">Impossible de charger photos.json.</div>';
+      renderNav(); renderHead();
+    });
+})();
+</script>
+
+</body>
+</html>
